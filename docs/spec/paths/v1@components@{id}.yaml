@@ -1,0 +1,30 @@
+parameters:
+  - name: address
+    in: path
+    description: Sender or receiver address
+    required: true
+    schema:
+      type: string
+
+get:
+  tags:
+    - Transfer
+  summary: Get Transfers by Address
+  description: Get Transfers by sender or receiver address
+  operationId: getTransfersByAddress
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/Transfer'
+    '400':
+      description: invalid request
+    '401':
+      description: not allowed
+    '500':
+      description: internal error
