@@ -21,7 +21,9 @@ get:
             type: object
             properties:
               data:
-                $ref: '#/components/schemas/Transfer'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transfer'
     '400':
       description: invalid request
     '401':
