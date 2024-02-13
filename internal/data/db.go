@@ -36,26 +36,18 @@ type Transfer struct {
 	Value       string `db:"value"`
 }
 
-type Person struct {
-	FirstName string `db:"first_name"`
-	LastName  string `db:"last_name"`
-	Email     string
-}
-
 func (d Database) SelectTransfersByAddress(address string) (error, []Transfer) {
-	query := sq.StatementBuilder.Select("from_address", "to_address").
-		From("transfers")
-	sql, _, _ := query.ToSql()
-	log.Println(sql)
-	transfers := []Transfer{}
-	// err := d.db.Select(&transfers, query)
-	// err := d.db.SelectRaw(&transfers, "SELECT from_address, to_address FROM transfers limit 100")
-	// people := []Person{}
-	err := d.db.SelectRaw(&transfers, "SELECT * FROM transfers ORDER BY id limit 100")
+	query := sq.StatementBuilder.Select("*").
+		From("transfers").Where(
+		sq.Or{
+			sq.Eq{"from_address": address},
+			sq.Eq{"to_address": address},
+		})
+	var transfers []Transfer
+	err := d.db.Select(&transfers, query)
 	if err != nil {
 		log.Println(err)
 		return err, nil
 	}
-	log.Println("success selection")
 	return nil, transfers
 }
