@@ -1,6 +1,8 @@
 package service
 
 import (
+	"github.com/evoaway/erc20-transfers-storage-svc/internal/data"
+	"gitlab.com/distributed_lab/kit/pgdb"
 	"net"
 	"net/http"
 
@@ -14,6 +16,7 @@ type service struct {
 	log      *logan.Entry
 	copus    types.Copus
 	listener net.Listener
+	db       *pgdb.DB
 }
 
 func (s *service) run() error {
@@ -23,7 +26,8 @@ func (s *service) run() error {
 	if err := s.copus.RegisterChi(r); err != nil {
 		return errors.Wrap(err, "cop failed")
 	}
-
+	ev := NewEventListener(data.New(s.db))
+	go ev.Run()
 	return http.Serve(s.listener, r)
 }
 
@@ -32,6 +36,7 @@ func newService(cfg config.Config) *service {
 		log:      cfg.Log(),
 		copus:    cfg.Copus(),
 		listener: cfg.Listener(),
+		db:       cfg.DB(),
 	}
 }
 
