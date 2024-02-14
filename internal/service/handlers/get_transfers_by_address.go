@@ -12,14 +12,14 @@ import (
 
 func GetTransfersByAddress(w http.ResponseWriter, r *http.Request) {
 	address := requests.NewGetAddress(r)
-	err, trs := DB(r).SelectTransfersByAddress(address)
+	err, transfers := DB(r).SelectTransfersByAddress(address)
 	if err != nil {
 		Log(r).WithError(err).Error("error processing get_transaction request")
 		ape.RenderErr(w, problems.InternalError())
 		return
 	}
 	ape.Render(w, resources.TransferListResponse{
-		Data: getArray(trs),
+		Data: getArray(transfers),
 	})
 }
 
