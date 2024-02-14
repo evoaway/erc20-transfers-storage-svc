@@ -4,7 +4,6 @@ import (
 	sq "github.com/Masterminds/squirrel"
 	"gitlab.com/distributed_lab/kit/pgdb"
 	"log"
-	"math/big"
 )
 
 type Database struct {
@@ -15,10 +14,10 @@ func New(db *pgdb.DB) Database {
 	return Database{db: db}
 }
 
-func (d Database) AddTransfer(from, to string, value *big.Int) error {
+func (d Database) AddTransfer(transfer Transfer) error {
 	query := sq.StatementBuilder.Insert("transfers").
 		Columns("from_address", "to_address", "value").
-		Values(from, to, value.String())
+		Values(transfer.FromAddress, transfer.ToAddress, transfer.Value)
 	err := d.db.Exec(query)
 	if err != nil {
 		log.Println(err)
@@ -26,14 +25,6 @@ func (d Database) AddTransfer(from, to string, value *big.Int) error {
 	}
 	log.Println("success insert")
 	return nil
-}
-
-// struct will be moved
-type Transfer struct {
-	Id          int64  `db:"id"`
-	FromAddress string `db:"from_address"`
-	ToAddress   string `db:"to_address"`
-	Value       string `db:"value"`
 }
 
 func (d Database) SelectTransfersByAddress(address string) (error, []Transfer) {
