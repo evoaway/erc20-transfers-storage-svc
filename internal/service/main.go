@@ -27,7 +27,7 @@ func (s *service) run() error {
 	if err := s.copus.RegisterChi(r); err != nil {
 		return errors.Wrap(err, "cop failed")
 	}
-	ev := NewEventListener(data.New(s.db), s.token.Url, s.token.Address)
+	ev := NewEventListener(data.New(s.db), s.token.Url, s.token.Address, s.token.Abi)
 	go ev.Run()
 	return http.Serve(s.listener, r)
 }

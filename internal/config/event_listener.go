@@ -9,6 +9,7 @@ import (
 type EventListener struct {
 	Url     string
 	Address string
+	Abi     string
 }
 
 type EventListenerer interface {
@@ -31,10 +32,11 @@ func (t *eventlistener) EventListener() *EventListener {
 		var config struct {
 			Url     string `fig:"url"`
 			Address string `fig:"address"`
+			Abi     string `fig:"abi"`
 		}
-		if err := figure.Out(&config).From(kv.MustGetStringMap(t.getter, "token")).Please(); err != nil {
+		if err := figure.Out(&config).From(kv.MustGetStringMap(t.getter, "event_listener")).Please(); err != nil {
 			panic(err)
 		}
-		return &EventListener{Address: config.Address, Url: config.Url}
+		return &EventListener{Address: config.Address, Url: config.Url, Abi: config.Abi}
 	}).(*EventListener)
 }
