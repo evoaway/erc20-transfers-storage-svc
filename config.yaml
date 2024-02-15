@@ -3,7 +3,7 @@ log:
   disable_sentry: true
 
 db:
-  url: "postgres://postgres:password@localhost:5432/erc20?sslmode=disable"
+  url: "postgres://postgres:postgrespass@localhost:5432/erc20?sslmode=disable"
 
 listener:
   addr: :8000
@@ -14,3 +14,7 @@ cop:
   upstream: "http://..."
   service_name: erc20-transfers-storage-svc
   service_port: 80
+
+token:
+  url: "wss://mainnet.infura.io/ws/v3/6331e165d922410b99436cae43293c11"
+  address: "0xdAC17F958D2ee523a2206206994597C13D831ec7"

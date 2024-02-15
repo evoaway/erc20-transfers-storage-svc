@@ -17,6 +17,7 @@ type service struct {
 	copus    types.Copus
 	listener net.Listener
 	db       *pgdb.DB
+	token    *config.EventListener
 }
 
 func (s *service) run() error {
@@ -26,7 +27,7 @@ func (s *service) run() error {
 	if err := s.copus.RegisterChi(r); err != nil {
 		return errors.Wrap(err, "cop failed")
 	}
-	ev := NewEventListener(data.New(s.db))
+	ev := NewEventListener(data.New(s.db), s.token.Url, s.token.Address)
 	go ev.Run()
 	return http.Serve(s.listener, r)
 }
@@ -37,6 +38,7 @@ func newService(cfg config.Config) *service {
 		copus:    cfg.Copus(),
 		listener: cfg.Listener(),
 		db:       cfg.DB(),
+		token:    cfg.EventListener(),
 	}
 }
 
