@@ -14,7 +14,7 @@ func GetTransfersByAddress(w http.ResponseWriter, r *http.Request) {
 	address := requests.NewGetAddress(r)
 	err, transfers := DB(r).SelectTransfersByAddress(address)
 	if err != nil {
-		Log(r).WithError(err).Error("error processing get_transaction request")
+		Log(r).WithError(err).Error("error processing get_transfers_by_address request")
 		ape.RenderErr(w, problems.InternalError())
 		return
 	}

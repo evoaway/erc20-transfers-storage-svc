@@ -3,7 +3,6 @@ package data
 import (
 	sq "github.com/Masterminds/squirrel"
 	"gitlab.com/distributed_lab/kit/pgdb"
-	"log"
 )
 
 type Database struct {
@@ -20,10 +19,8 @@ func (d Database) AddTransfer(transfer Transfer) error {
 		Values(transfer.FromAddress, transfer.ToAddress, transfer.Value)
 	err := d.db.Exec(query)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
-	log.Println("success insert")
 	return nil
 }
 
@@ -37,7 +34,6 @@ func (d Database) SelectTransfersByAddress(address string) (error, []Transfer) {
 	var transfers []Transfer
 	err := d.db.Select(&transfers, query)
 	if err != nil {
-		log.Println(err)
 		return err, nil
 	}
 	return nil, transfers
