@@ -9,5 +9,5 @@ create table if not exists transfers
 create index if not exists transfers_index on transfers (from_address, to_address);
 
 -- +migrate Down
-drop table if exists transfers;
 drop index if exists transfers_index;
+drop table if exists transfers;
