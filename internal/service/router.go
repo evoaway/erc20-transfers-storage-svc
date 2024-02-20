@@ -1,7 +1,7 @@
 package service
 
 import (
-	"github.com/evoaway/erc20-transfers-storage-svc/internal/data"
+	"github.com/evoaway/erc20-transfers-storage-svc/internal/data/db"
 	"github.com/evoaway/erc20-transfers-storage-svc/internal/service/handlers"
 	"github.com/go-chi/chi"
 	"gitlab.com/distributed_lab/ape"
@@ -15,7 +15,7 @@ func (s *service) router() chi.Router {
 		ape.LoganMiddleware(s.log),
 		ape.CtxMiddleware(
 			handlers.CtxLog(s.log),
-			handlers.CtxDB(data.New(s.db)),
+			handlers.CtxTransfer(db.New(s.pg)),
 		),
 	)
 	r.Route("/integrations/erc20-transfers-storage-svc", func(r chi.Router) {

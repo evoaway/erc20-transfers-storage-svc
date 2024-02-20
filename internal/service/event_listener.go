@@ -14,15 +14,15 @@ import (
 )
 
 type EventListener struct {
-	DB              data.Database
+	Transfer        data.ITransfer
 	ClientUrl       string
 	ContractAddress string
 	ABI             string
 }
 
-func NewEventListener(db data.Database, url, address, abi string) *EventListener {
+func NewEventListener(t data.ITransfer, url, address, abi string) *EventListener {
 	return &EventListener{
-		DB:              db,
+		Transfer:        t,
 		ClientUrl:       url,
 		ContractAddress: address,
 		ABI:             abi,
@@ -68,7 +68,7 @@ func (e *EventListener) Run() {
 				ToAddress:   common.BytesToAddress(eventLog.Topics[2].Bytes()).Hex(),
 				Value:       Event.Value.String(),
 			}
-			err = e.DB.AddTransfer(transfer)
+			err = e.Transfer.Add(transfer)
 			if err != nil {
 				log.Println(err)
 			}
